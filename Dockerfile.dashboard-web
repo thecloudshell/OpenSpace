@@ -2,6 +2,8 @@
 
 # ── Stage 1: build the Next.js dashboard ──────────────────────────────
 FROM node:20-alpine AS builder
+ARG API_INTERNAL_URL=http://127.0.0.1:7788
+ENV API_INTERNAL_URL=$API_INTERNAL_URL
 
 WORKDIR /app
 

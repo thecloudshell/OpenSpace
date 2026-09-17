@@ -21,13 +21,15 @@ services:
     build:
       context: ..
       dockerfile: Dockerfile.dashboard-web
+      args:
+        # Baked into the rewrite destination at `next build` time.
+        API_INTERNAL_URL: http://dashboard-api:7788
     image: openspace-dashboard-web:latest
     container_name: openspace-dashboard-web
     ports:
       - '127.0.0.1:4799:4799'
     environment:
-      # Next.js evaluates rewrites at server start, so this is read at
-      # container runtime and points the /api proxy at the API container.
+      # Kept for parity with the build arg; rewrites use the baked value.
       API_INTERNAL_URL: http://dashboard-api:7788
     depends_on:
       - dashboard-api
