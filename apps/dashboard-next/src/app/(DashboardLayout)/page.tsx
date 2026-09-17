@@ -1,5 +1,6 @@
 'use client'
 
+import { useState } from 'react'
 import Link from 'next/link'
 import useSWR from 'swr'
 import { Icon } from '@iconify/react'
@@ -10,6 +11,7 @@ import StatCard from '@/app/components/drn/StatCard'
 import PageHeader from '@/app/components/drn/PageHeader'
 import EmptyState from '@/app/components/drn/EmptyState'
 import HowToPanel from '@/app/components/drn/HowToPanel'
+import { useToast } from '@/app/components/drn/ToastProvider'
 
 const SPARK_SKILLS = [26, 22, 24, 16, 18, 10, 12, 4]
 const SPARK_SCORE = [20, 18, 21, 14, 15, 9, 7, 7]
@@ -26,19 +28,47 @@ function scoreBadge(score: number) {
 
 export default function DashboardPage() {
   const { data, error, mutate, isLoading } = useSWR<OverviewResponse>('drn-overview', () => api.overview())
+  const { toast } = useToast()
+  const [checking, setChecking] = useState(false)
+  const [lastChecked, setLastChecked] = useState('')
+
+  const recheck = async () => {
+    setChecking(true)
+    try {
+      const overview = await mutate()
+      setLastChecked(new Date().toLocaleTimeString())
+      if (overview && overview.health.status === 'ok') {
+        toast('Runtime re-checked — all healthy', 'success')
+      } else {
+        toast('Runtime re-checked — issues found', 'error')
+      }
+    } catch {
+      toast('Runtime re-check failed — API unreachable', 'error')
+    } finally {
+      setChecking(false)
+    }
+  }
 
   if (isLoading) {
     return <div className='text-sm text-muted py-10'>Loading dashboard…</div>
   }
 
   if (error || !data) {
+    const retry = async () => {
+      try {
+        await mutate()
+        toast('Connected — dashboard reloaded', 'success')
+      } catch {
+        toast('Still unreachable — is openspace-dashboard running on port 7788?', 'error', 4000)
+      }
+    }
     return (
       <div className='space-y-4'>
         <EmptyState
           title='Dashboard unavailable'
           description={error instanceof Error ? error.message : 'Could not reach the OpenSpace API. Is openspace-dashboard running on port 7788?'}
         />
-        <Button variant='outline' onClick={() => void mutate()}>Retry</Button>
+        <Button variant='outline' onClick={() => void retry()}>Retry</Button>
       </div>
     )
   }
@@ -135,10 +165,19 @@ export default function DashboardPage() {
               </dd>
             </div>
           </dl>
-          <Button variant='outline' className='mt-5' onClick={() => void mutate()}>
-            <Icon icon='solar:refresh-line-duotone' width={14} className='mr-1.5' />
-            Re-check
-          </Button>
+          <div className='mt-5 flex items-center gap-3'>
+            <Button variant='outline' onClick={() => void recheck()} disabled={checking}>
+              {checking ? (
+                <Icon icon='tabler:loader-2' width={14} className='mr-1.5 animate-spin' />
+              ) : (
+                <Icon icon='solar:refresh-line-duotone' width={14} className='mr-1.5' />
+              )}
+              {checking ? 'Checking…' : 'Re-check'}
+            </Button>
+            {lastChecked ? (
+              <span className='text-[12px] text-muted font-mono'>Last checked {lastChecked}</span>
+            ) : null}
+          </div>
         </Card>
 
         <HowToPanel />

@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { Icon } from '@iconify/react'
 import { Button } from '@/components/ui/button'
+import { useToast } from '@/app/components/drn/ToastProvider'
 
 const CLI_TEXT = 'openspace-upload-skill --skill-dir /path\nopenspace-download-skill <id>'
 
@@ -14,8 +15,9 @@ const STEPS = [
   'OpenSpace auto-discovers, safety-checks and tracks it in this dashboard.',
 ]
 
-export default function HowToPanel() {
+export default function HowToPanel({ className = '' }: { className?: string }) {
   const [copied, setCopied] = useState(false)
+  const { toast } = useToast()
 
   const copy = async () => {
     try {
@@ -29,11 +31,12 @@ export default function HowToPanel() {
       ta.remove()
     }
     setCopied(true)
-    window.setTimeout(() => setCopied(false), 1500)
+    toast('CLI commands copied to clipboard', 'success')
+    window.setTimeout(() => setCopied(false), 2000)
   }
 
   return (
-    <div className='bg-forest text-white rounded-2xl p-6 shadow-sm relative overflow-hidden'>
+    <div className={`bg-forest text-white rounded-2xl p-6 shadow-sm relative overflow-hidden ${className}`}>
       <Icon
         icon='solar:layers-line-duotone'
         width={180}
@@ -63,7 +66,12 @@ export default function HowToPanel() {
           size='sm'
           variant='outline'
           onClick={() => void copy()}
-          className='absolute top-2.5 right-2.5 h-7 text-[11px] bg-white/10 border-white/20 text-white hover:bg-white/20 hover:text-white'>
+          className={`absolute top-2.5 right-2.5 h-7 text-[11px] gap-1 border-white/20 transition-colors ${
+            copied
+              ? 'bg-emerald-500/90 hover:bg-emerald-500 border-emerald-400 text-white'
+              : 'bg-white/10 text-white hover:bg-white/20 hover:text-white'
+          }`}>
+          {copied ? <Icon icon='tabler:check' width={13} height={13} /> : <Icon icon='tabler:copy' width={13} height={13} />}
           {copied ? 'Copied' : 'Copy'}
         </Button>
       </div>

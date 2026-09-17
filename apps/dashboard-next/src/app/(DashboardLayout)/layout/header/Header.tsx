@@ -4,10 +4,17 @@ import { useState } from 'react'
 import Link from 'next/link'
 import useSWR from 'swr'
 import { Icon } from '@iconify/react'
-import { useTheme } from 'next-themes'
 import SidebarLayout from '../sidebar/Sidebar'
 import DrnLogo from '@/app/components/drn/DrnLogo'
+import HowToPanel from '@/app/components/drn/HowToPanel'
 import { api, type HealthPayload } from '@/lib/api'
+import { Button } from '@/components/ui/button'
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogTitle,
+} from '@/components/ui/dialog'
 import { Sheet, SheetContent, SheetTitle } from '@/components/ui/sheet'
 import { VisuallyHidden } from '@radix-ui/react-visually-hidden'
 
@@ -31,12 +38,8 @@ function ApiStatusChip() {
 }
 
 const Header = () => {
-  const { theme, setTheme } = useTheme()
   const [isOpen, setIsOpen] = useState(false)
-
-  const toggleMode = () => {
-    setTheme(theme === 'light' ? 'dark' : 'light')
-  }
+  const [addSkillOpen, setAddSkillOpen] = useState(false)
 
   return (
     <>
@@ -63,21 +66,13 @@ const Header = () => {
 
           <div className='flex items-center gap-2.5'>
             <ApiStatusChip />
-            <div
-              className='hover:text-white px-2 text-stone-300 group focus:ring-0 rounded-full flex justify-center items-center cursor-pointer relative'
-              onClick={toggleMode}>
-              <span className='flex items-center justify-center relative after:absolute after:w-10 after:h-10 after:rounded-full after:-top-1/2 group-hover:after:bg-white/10'>
-                {theme === 'light' ? (
-                  <Icon icon='tabler:moon' width='20' />
-                ) : (
-                  <Icon
-                    icon='solar:sun-bold-duotone'
-                    width='20'
-                    className='group-hover:text-white'
-                  />
-                )}
-              </span>
-            </div>
+            <Button
+              type='button'
+              onClick={() => setAddSkillOpen(true)}
+              className='inline-flex items-center gap-1.5 px-4 py-2 text-sm font-semibold text-white bg-signal hover:bg-signal-dark rounded-lg shadow-sm transition'>
+              <Icon icon='tabler:plus' width={14} height={14} />
+              Add Skill
+            </Button>
           </div>
         </nav>
       </header>
@@ -91,6 +86,19 @@ const Header = () => {
           <SidebarLayout onClose={() => setIsOpen(false)} />
         </SheetContent>
       </Sheet>
+
+      {/* Add Skill dialog */}
+      <Dialog open={addSkillOpen} onOpenChange={setAddSkillOpen}>
+        <DialogContent className='max-w-2xl max-h-[85vh] overflow-y-auto p-0 gap-0'>
+          <VisuallyHidden>
+            <DialogTitle>How to add more skills</DialogTitle>
+            <DialogDescription>
+              Five ways to grow your library — drop a folder, ask your agent, or use the CLI.
+            </DialogDescription>
+          </VisuallyHidden>
+          <HowToPanel className='rounded-none' />
+        </DialogContent>
+      </Dialog>
     </>
   )
 }

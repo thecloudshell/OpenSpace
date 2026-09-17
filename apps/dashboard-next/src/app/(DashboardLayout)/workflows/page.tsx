@@ -4,6 +4,7 @@ import { useMemo, useState } from 'react'
 import useSWR from 'swr'
 import { Icon } from '@iconify/react'
 import { Card } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import {
   Table,
@@ -16,6 +17,7 @@ import {
 import { api, type WorkflowSummary } from '@/lib/api'
 import PageHeader from '@/app/components/drn/PageHeader'
 import EmptyState from '@/app/components/drn/EmptyState'
+import { useToast } from '@/app/components/drn/ToastProvider'
 
 function scoreBadge(score: number) {
   return score >= 85
@@ -45,8 +47,19 @@ function formatStart(startTime: string | null): string {
 
 export default function WorkflowsPage() {
   const [query, setQuery] = useState('')
+  const { toast } = useToast()
 
-  const { data, error, isLoading } = useSWR('drn-workflows', () => api.workflows())
+  const { data, error, isLoading, mutate } = useSWR('drn-workflows', () => api.workflows())
+
+  const recheck = async () => {
+    try {
+      const result = await mutate()
+      const count = result?.items?.length ?? 0
+      toast(count > 0 ? `Re-check complete — ${count} session${count === 1 ? '' : 's'} found` : 'Re-check complete — no sessions recorded yet', 'success')
+    } catch {
+      toast('Re-check failed — API unreachable', 'error')
+    }
+  }
 
   const filtered = useMemo(() => {
     const items = data?.items ?? []
@@ -91,17 +104,28 @@ export default function WorkflowsPage() {
 
       {isLoading ? <div className='text-sm text-muted'>Loading workflows…</div> : null}
       {error ? (
-        <EmptyState
-          title='Workflows unavailable'
-          description={error instanceof Error ? error.message : 'Could not reach the OpenSpace API.'}
-        />
+        <div className='space-y-4'>
+          <EmptyState
+            title='Workflows unavailable'
+            description={error instanceof Error ? error.message : 'Could not reach the OpenSpace API.'}
+          />
+          <Button variant='outline' onClick={() => void recheck()}>Re-check</Button>
+        </div>
       ) : null}
 
       {!isLoading && !error && filtered.length === 0 ? (
-        <EmptyState
-          title={query ? 'No sessions match' : 'No workflow sessions'}
-          description={query ? 'Try a different search.' : 'Recorded OpenSpace runs will appear here once workflows execute.'}
-        />
+        <div className='space-y-4'>
+          <EmptyState
+            title={query ? 'No sessions match' : 'No workflow sessions'}
+            description={query ? 'Try a different search.' : 'Recorded OpenSpace runs will appear here once workflows execute.'}
+          />
+          {!query ? (
+            <Button variant='outline' onClick={() => void recheck()}>
+              <Icon icon='solar:refresh-line-duotone' width={14} className='mr-1.5' />
+              Re-check
+            </Button>
+          ) : null}
+        </div>
       ) : null}
 
       {!isLoading && !error && filtered.length > 0 ? (

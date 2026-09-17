@@ -124,7 +124,7 @@ export default function SkillsPage() {
               type='button'
               aria-pressed={on}
               onClick={() => setCategory(cat)}
-              className={`px-3.5 py-1.5 text-[13px] rounded-full transition hover:-translate-y-px ${
+              className={`px-3.5 py-1.5 text-[13px] rounded-full transition-all duration-150 hover:-translate-y-px focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-forest/40 ${
                 on
                   ? 'font-semibold text-white bg-forest shadow-sm'
                   : 'font-medium text-stone-600 bg-white border border-line shadow-sm hover:border-stone-300'
@@ -134,6 +134,11 @@ export default function SkillsPage() {
           )
         })}
       </div>
+
+      <p className='text-[12px] text-muted font-mono -mt-4'>
+        Showing {filtered.length} of {classes.length} skill{classes.length === 1 ? '' : 's'}
+        {query.trim() ? ` matching “${query.trim()}”` : ''}
+      </p>
 
       <div className='grid grid-cols-1 lg:grid-cols-[260px_1fr] gap-6 items-start'>
         <div className='space-y-6'>

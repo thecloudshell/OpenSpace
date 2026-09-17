@@ -2,6 +2,7 @@
 
 import Header from './layout/header/Header'
 import Sidebar from './layout/sidebar/Sidebar'
+import { ToastProvider } from '@/app/components/drn/ToastProvider'
 
 export default function Layout({
   children,
@@ -9,7 +10,7 @@ export default function Layout({
   children: React.ReactNode
 }>) {
   return (
-    <>
+    <ToastProvider>
       <div className='flex w-full min-h-screen'>
         <div className='page-wrapper flex w-full'>
           {/* Header/sidebar */}
@@ -24,6 +25,6 @@ export default function Layout({
           </div>
         </div>
       </div>
-    </>
+    </ToastProvider>
   )
 }

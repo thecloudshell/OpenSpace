@@ -81,9 +81,9 @@ export default function EvolutionPage() {
                 type='button'
                 aria-pressed={on}
                 onClick={() => setSelectedSkill(skill.skill_id)}
-                className={`px-3.5 py-1.5 text-[13px] rounded-full transition hover:-translate-y-px font-mono ${
+                className={`px-3.5 py-1.5 text-[13px] rounded-full transition-all duration-150 hover:-translate-y-px focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-forest/40 font-mono ${
                   on
-                    ? 'font-semibold text-white bg-forest shadow-sm'
+                    ? 'font-semibold text-white bg-forest shadow-sm ring-1 ring-forest/30'
                     : 'font-medium text-stone-600 bg-white border border-line shadow-sm hover:border-stone-300'
                 }`}>
                 {skill.name}
