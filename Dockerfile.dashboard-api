@@ -1,0 +1,29 @@
+# syntax=docker/dockerfile:1
+
+# OpenSpace dashboard API (Flask) — serves the skill store, workflows and
+# evolution audit endpoints consumed by the Next.js dashboard.
+
+FROM python:3.14-slim AS runtime
+
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1
+
+WORKDIR /opt/openspace
+
+# Install the openspace package (pulls Flask/werkzeug and friends).
+COPY pyproject.toml README.md ./
+COPY openspace ./openspace
+RUN pip install --no-cache-dir .
+
+# The sqlite stores live under <storage-root>/.openspace (openspace.db +
+# evidence.db). Mount a named volume here so skill data survives restarts.
+RUN mkdir -p /workspace
+VOLUME ["/workspace"]
+
+EXPOSE 7788
+
+HEALTHCHECK --interval=30s --timeout=5s --start-period=20s \
+  CMD python -c "import urllib.request; urllib.request.urlopen('http://127.0.0.1:7788/api/v1/health', timeout=4)" || exit 1
+
+# Bind to all interfaces so the web container can reach the API.
+CMD ["openspace-dashboard", "--host", "0.0.0.0", "--port", "7788", "--evolution-storage-root", "/workspace"]

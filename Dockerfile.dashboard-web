@@ -1,0 +1,34 @@
+# syntax=docker/dockerfile:1
+
+# ── Stage 1: build the Next.js dashboard ──────────────────────────────
+FROM node:20-alpine AS builder
+
+WORKDIR /app
+
+# Copy the dashboard app with its lockfile for a reproducible install.
+COPY apps/dashboard-next/package.json apps/dashboard-next/package-lock.json ./
+RUN npm ci --no-audit --no-fund
+
+COPY apps/dashboard-next/ ./
+RUN npm run build
+
+# ── Stage 2: standalone runtime ───────────────────────────────────────
+FROM node:20-alpine AS runner
+
+WORKDIR /app
+ENV NODE_ENV=production
+ENV PORT=4799
+ENV HOSTNAME=0.0.0.0
+
+# Next.js standalone output bundles only the server and required assets.
+COPY --from=builder /app/.next/standalone ./
+COPY --from=builder /app/.next/static ./.next/static
+COPY --from=builder /app/public ./public
+
+EXPOSE 4799
+
+HEALTHCHECK --interval=30s --timeout=5s --start-period=15s \
+  CMD wget -qO- http://127.0.0.1:4799/ >/dev/null 2>&1 || exit 1
+
+# API_INTERNAL_URL points the /api proxy at the dashboard-api container.
+CMD ["node", "server.js"]
