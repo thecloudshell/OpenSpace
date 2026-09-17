@@ -17,7 +17,19 @@ main {
 }
 
 @theme {
-  
+
+  /* DRN brand palette */
+  --color-forest: #050B2E;
+  --color-forest-dark: #03061c;
+  --color-forest-soft: #eceef6;
+  --color-signal: #ED1C24;
+  --color-signal-dark: #c8161d;
+  --color-signal-soft: #fdeaea;
+  --color-cream: #f7f5f1;
+  --color-line: #e8e4dc;
+  --color-amberx: #d99a2b;
+  --color-amberx-soft: #faf3e3;
+
   --shadow-lg: 0 1rem 3rem rgba(0, 0, 0, 0.175);
   
   --shadow-sm: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);

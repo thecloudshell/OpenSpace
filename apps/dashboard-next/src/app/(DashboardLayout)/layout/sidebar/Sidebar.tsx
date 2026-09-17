@@ -85,6 +85,8 @@ const SidebarLayout = ({ onClose }: { onClose?: () => void }) => {
       showProfile={false}
       width={'270px'}
       showTrigger={false}
+      themeColor='#050B2E'
+      textColor='#1c1917'
       className='fixed left-0 top-0 border border-border bg-white dark:bg-dark z-10 h-screen'>
       {/* Logo */}
       <div className='px-6 flex items-center brand-logo overflow-hidden h-[68px]'>

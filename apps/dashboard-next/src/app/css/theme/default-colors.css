@@ -3,18 +3,18 @@
   --color-success: #13deb9;
   --color-warning: #d99a2b;
   --color-error: #ef4444;  
-  --color-darkinfo: #223662;
+  --color-darkinfo: #050B2E;
   --color-white: #fff;
   --color-dark: #050B2E;
   --color-border: #e8e4dc;
-  --color-darkborder: #333f55;
+  --color-darkborder: #44403c;
   --color-link: #1c1917;
   --color-muted: #78716c;
-  --color-darkmuted: #2a3851;
-  --color-darklink: #7c8fac;
+  --color-darkmuted: #a8a29e;
+  --color-darklink: #a8a29e;
   --color-lightgray: #f7f5f1;
-  --color-darkgray: #333f55;
-  --color-bodytext: #5a6a85bf;
+  --color-darkgray: #44403c;
+  --color-bodytext: #78716c;
   --color-primary: #050B2E;
   --color-secondary: #ED1C24;
   --color-input: #e5e7eb;
@@ -23,8 +23,6 @@
   /* --color-success-emphasis: #10bd9d; */
   /* --color-primary-emphasis: #4f73d9; */
   /* --color-secondary-emphasis: #3ea2d9; */
-  /* --color-lightprimary: #5d87ff20; */
-  /* --color-lightsecondary: #49beff20; */
   /* --color-lightsuccess: #13deb920; */
   /* --color-lighterror: #fa896b20; */
   /* --color-lightinfo: #8754ec1a; */
@@ -80,10 +78,10 @@
 
   /* common var for dark&light */
   --color-charcoal: #1c1917;
-  --color-customdark: #1c2536;
+  --color-customdark: #050B2E;
   --color-defaultBorder: #e8e4dc;
-  --color-slateGray: #5a6a85bf;
-  --color-breadcrumbColor: #49beff20;
+  --color-slateGray: #78716c;
+  --color-breadcrumbColor: #ED1C2420;
 
   --shadow-md: 0px 1px 4px 0px rgba(133, 146, 173, 0.2);
 
@@ -101,7 +99,7 @@
   --secondary: var(--color-secondary);
   --secondary-foreground: var(--color-white);
   --muted: #f5f5f5;
-  --muted-foreground: #737373;
+  --muted-foreground: #78716c;
   --accent: var(--color-lightprimary);
   --accent-foreground: var(--color-primary);
   --destructive: var(--color-error);

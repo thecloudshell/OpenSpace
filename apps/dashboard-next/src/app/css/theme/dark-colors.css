@@ -31,12 +31,12 @@
     --sidebar-accent-foreground: var(--color-sidebar-accent-foreground);
     --sidebar-border: var(--color-sidebar-border);
     --sidebar-ring: var(--color-sidebar-ring);
-     --color-lightprimary: #5D87FF20;
+     --color-lightprimary: #050B2E66;
 
     /* common var for dark&light */
-    --color-charcoal: #7c8fac;
+    --color-charcoal: #a8a29e;
     --color-customdark: #ffff;
-    --color-defaultBorder: #333f55;
-    --color-slateGray: #7c8fac;
-    --color-breadcrumbColor: #223662;
+    --color-defaultBorder: #44403c;
+    --color-slateGray: #a8a29e;
+    --color-breadcrumbColor: #ED1C24;
 }
